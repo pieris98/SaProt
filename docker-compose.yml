@@ -1,0 +1,25 @@
+services:
+  saprot:
+    build:
+      context: ..
+      dockerfile: SaProt/Dockerfile
+    image: saprot:latest
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+    volumes:
+      - ~/.cache/huggingface:/workspace/phd/SaProt/.cache/huggingface
+      - ./checkpoints:/workspace/phd/SaProt/checkpoints
+      - ./data:/workspace/phd/SaProt/data
+    working_dir: /workspace/phd/SaProt
+    environment:
+      - WANDB_MODE=offline
+      - HF_HOME=/workspace/phd/SaProt/.cache/huggingface
+      - PROJECT_ROOT=/workspace/phd/SaProt
+    stdin_open: true
+    tty: true
+    command: ["bash"]
